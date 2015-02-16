@@ -19,7 +19,7 @@ public class WebserviceRunner {
 	}
 
 	public String getWebXml() {
-		return "WebRoot/WEB-INF/web.xml";
+		return "WEB-INF/web.xml";
 	}
 
 	public String getResourceBase() {

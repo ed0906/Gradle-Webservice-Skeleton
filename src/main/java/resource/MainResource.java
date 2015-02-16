@@ -6,7 +6,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
-@Path("/api")
+import com.sun.jersey.api.view.Viewable;
+
+@Path("/rest")
 public class MainResource {
 
 	@GET
@@ -25,6 +27,12 @@ public class MainResource {
 	@Path("/talk")
 	public Response commandQuery(@QueryParam("msg") String msg){
 		return Response.ok(msg).build();
+	}
+
+	@GET
+	@Path("/index")
+	public Viewable getIndexHTML() {
+		return new Viewable("/index");
 	}
 
 }
