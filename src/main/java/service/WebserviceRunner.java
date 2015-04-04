@@ -1,10 +1,11 @@
 package service;
 
-import java.io.File;
-
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.glassfish.jersey.server.ServerProperties;
+import org.glassfish.jersey.servlet.ServletContainer;
 
 public class WebserviceRunner {
 
@@ -18,29 +19,18 @@ public class WebserviceRunner {
 		this.port = port;
 	}
 
-	public String getWebXml() {
-		return "WEB-INF/web.xml";
-	}
-
-	public String getResourceBase() {
-		return "./";
-	}
-
 	public void start() throws Exception {
 		HandlerCollection handlers = new HandlerCollection();
 		WebAppContext handler = new WebAppContext();
-		handler.setResourceBase(getResourceBase());
 
-		final String webXmlAddress = getWebXml();
-		final File webXml = new File(webXmlAddress);
-		if (!webXml.exists()) {
-			throw new RuntimeException("web.xml not found at: " + webXml.getAbsolutePath());
-		}
-
-		handler.setDescriptor(webXmlAddress);
 		handler.setContextPath("/");
+		handler.setResourceBase("./");
 		handler.setClassLoader(Thread.currentThread().getContextClassLoader());
-
+		
+		ServletHolder restServlet = handler.addServlet(ServletContainer.class,  "/*");
+		restServlet.setInitOrder(0);
+		restServlet.setInitParameter(ServerProperties.PROVIDER_PACKAGES,"resource");
+		
 		handlers.addHandler(handler);
 
 		server.setHandler(handlers);
